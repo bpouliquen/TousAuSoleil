@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<web-app> 
+
+	<servlet> 
+		<servlet-name>crco</servlet-name>
+		<servlet-class>controller.CreerCompte</servlet-class>       
+	</servlet>
+	
+	<servlet-mapping> 
+		<servlet-name>crco</servlet-name>
+		<url-pattern>/creer-compte</url-pattern>
+	</servlet-mapping>
+	
+	<servlet> 
+		<servlet-name>seco</servlet-name>
+		<servlet-class>controller.Connexion</servlet-class>       
+	</servlet>
+	
+	<servlet-mapping> 
+		<servlet-name>seco</servlet-name>
+		<url-pattern>/se-connecter</url-pattern>
+	</servlet-mapping>
+	
+	<servlet> 
+		<servlet-name>rchvol</servlet-name>
+		<servlet-class>controller.RechercherVol</servlet-class>       
+	</servlet>
+	
+	<servlet-mapping> 
+		<servlet-name>rchvol</servlet-name>
+		<url-pattern>/rechercher-vol</url-pattern>
+	</servlet-mapping>
+
+</web-app>

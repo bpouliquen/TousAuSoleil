@@ -30,5 +30,15 @@
 		<servlet-name>rchvol</servlet-name>
 		<url-pattern>/rechercher-vol</url-pattern>
 	</servlet-mapping>
+	
+	<servlet> 
+		<servlet-name>reserv</servlet-name>
+		<servlet-class>controller.Reserver</servlet-class>       
+	</servlet>
+	
+	<servlet-mapping> 
+		<servlet-name>rchvol</servlet-name>
+		<url-pattern>/reserver</url-pattern>
+	</servlet-mapping>
 
 </web-app>

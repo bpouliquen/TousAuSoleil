@@ -13,17 +13,20 @@ import modele.Compte;
 public class Connexion extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse res) {
 		// Récupération des paramètres
 		String login = req.getParameter("login");
 		String mdp = req.getParameter("mdp");
+		try {
+			// Requête SQL
+			Compte c = Compte.connecter(login, mdp);
 
-		// Requête SQL
-		Compte c = Compte.connecter(login, mdp);
-
-		// Envoi des informations de traitement à la vue
-		req.setAttribute("compte", c);
-		RequestDispatcher d = req.getRequestDispatcher("/vue/connexion.jsp");
-		d.forward(req, res);
+			// Envoi des informations de traitement à la vue
+			req.setAttribute("compte", c);
+			RequestDispatcher d = req.getRequestDispatcher("/vue/connexion.jsp");
+			d.forward(req, res);
+		} catch (IOException | ServletException e) {
+			e.printStackTrace();
+		}
 	}
 }

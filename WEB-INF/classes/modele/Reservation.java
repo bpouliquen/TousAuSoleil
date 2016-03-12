@@ -5,9 +5,9 @@ public class Reservation {
 	private String login;
 	private int noVol;
 	private int nbePlaces;
-	private String confirmation;
+	private boolean confirmation;
 
-	public Reservation(int noRes, String log, int noV, int nbePla, String conf) {
+	public Reservation(int noRes, String log, int noV, int nbePla, boolean conf) {
 		this.noReservation = noRes;
 		this.login = log;
 		this.noVol = noV;
@@ -31,7 +31,11 @@ public class Reservation {
 		return nbePlaces;
 	}
 
-	public String getConfirmation() {
+	public boolean getConfirmation() {
 		return confirmation;
+	}
+
+	public void confirmer() {
+		this.confirmation = true;
 	}
 }

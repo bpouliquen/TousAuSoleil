@@ -10,10 +10,11 @@
 	</header>
 	<section>
 		<h2>Rechercher un vol:</h2>
-		<form action="rechercher-vol">
+		<form action="../rechercher-vol">
 			<p>Destination: <input type="text" name="dest"></p>
-			<p>Date de d&eacute;part: Jour <input type="number" maxlength=2 max=31 name="jour"> Mois <input type="number" maxlength=2 max=12 name="mois"> Ann&eacute;e <input type="number" maxlength=4 name="annee" value=2016></p>
+			<p>Date de d&eacute;part: <input type="text"  name="date"> format: YYYY/MM/DD</p>
 			<p>Nombre de personnes: <input type="number" name="nbpers"></p>
+			<input type="hidden" name="log" value="<%=log %>">
 			<input type="submit" value="Rechercher">
 		</form><br/>
 	</section>

@@ -1,6 +1,6 @@
 <%@ page import="modele.Compte" %>
+<% Compte log = Compte.getCompte((String) session.getAttribute("log")); %>
 <%
-	Compte c = (Compte) request.getAttribute("compte");
 	int s = (int) request.getAttribute("statut");
 	String msg="";
 	if(s<1) {
@@ -24,13 +24,14 @@
 	</header>
 	<section>
 		<% if(s>0) { %>
-			<p>F&eacute;licitations M./Mme. <%=c.getNom() %>, votre compte a bien &eacute;t&eacute; cr&eacute;&eacute;.
-			<br/><a href="vue/accueil.jsp?log=<%=c.getLogin() %>">Aller &agrave; l'accueil</a></p>
+			<p>F&eacute;licitations M./Mme. <%=log.getNom() %>, votre compte a bien &eacute;t&eacute; cr&eacute;&eacute;.
+			<br/><a href="accueil">Aller &agrave; l'accueil</a></p>
 		<% } else { %>
 			<p><%=msg %></p>
 		<% } %>
 	</section>
 	<footer>
+		<p><a href="deconnexion">Se d&eacute;connecter</a></p>
 	</footer>
 </body>
 </html>

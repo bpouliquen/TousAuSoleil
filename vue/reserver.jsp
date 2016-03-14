@@ -1,8 +1,9 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.sql.Date" %>
 <%@ page import="modele.Vol" %>
+<%@ page import="modele.Compte" %>
+<% Compte log = Compte.getCompte((String) session.getAttribute("log")); %>
 <%
-	String log = request.getParameter("log");
 	String dest = request.getParameter("dest");
 	String date = request.getParameter("date");
 	int nbPers = (int) request.getAttribute("nbpers");
@@ -15,7 +16,7 @@
 </head>
 <body>
 	<header>
-		<h1>R&eacute;server un vol | <%=log %></h1>
+		<h1>R&eacute;server un vol | <%=log.getPrenom() %></h1>
 	</header>
 	<section>
 		<h2>Param&egrave;tres:</h2>
@@ -39,13 +40,15 @@
 				<td><%=v.getDateDepart().toString() %></td>
 				<td><%=v.getNbePlaces() %></td>
 				<td><%=v.getPrix() %></td>
-				<td><a href="../reserver?log=<%=log %>&op=re&vol=<%=v.getNoVol() %>">R&eacute;servation</a> | <a href="../reserver?log=<%=log %>&op=pre&vol=<%=v.getNoVol() %>">Prer&eacute;servation</a></td>
+				<td><a href="reserver?op=re&vol=<%=v.getNoVol() %>&nbe=<%=nbPers %>">R&eacute;servation</a> | <a href="reserver?op=pre&vol=<%=v.getNoVol() %>&nbe=<%=nbPers %>">Prer&eacute;servation</a></td>
 			</tr>
 			<% } %>
 		</table>
-		<% } else { %><p>D&eacute;sol&eacute;, aucun vol n'est disponible aux crit&egrave;res demand&eacute;s.<br/><a href="vue/accueil.jsp?log=<%=log %>">Retourner &agrave; l'accueil</a></p><% } %>
+		<% } else { %><p>D&eacute;sol&eacute;, aucun vol n'est disponible aux crit&egrave;res demand&eacute;s.</p><% } %>
+		<p><a href="accueil">Retourner &agrave; l'accueil</a></p>
 	</section>
 	<footer>
+		<p><a href="deconnexion">Se d&eacute;connecter</a></p>
 	</footer>
 </body>
 </html>

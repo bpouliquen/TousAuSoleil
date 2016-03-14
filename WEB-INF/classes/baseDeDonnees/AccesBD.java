@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import modele.*;
@@ -24,6 +25,16 @@ public class AccesBD {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
 		}
+	}
+	
+	public static ResultSet getVols() throws SQLException {
+		 Statement srchVols = co.createStatement();
+			return srchVols.executeQuery("SELECT numerovol FROM VOLS");
+	}
+	
+	public static ResultSet getReservations() throws SQLException {
+			Statement srchRes = co.createStatement();
+			return srchRes.executeQuery("SELECT numerores FROM RESERVATIONS");
 	}
 
 	public static int ajouterCompte(Compte c) {
@@ -108,22 +119,66 @@ public class AccesBD {
 		}
 	}
 
-	public static int reserver(Reservation re) {
-		int statut=0;
+	public static Reservation reserver(Reservation re) {
 		try {
-			PreparedStatement st1 = co.prepareStatement("UPDATE TABLE VOLS SET nombreplaces=nombreplaces-? WHERE novol=?");
+			PreparedStatement st1 = co
+					.prepareStatement("UPDATE VOLS SET nombreplaces=nombreplaces-? WHERE numerovol=?");
 			st1.setInt(1, re.getNbePlaces());
 			st1.setInt(2, re.getNoVol());
-			statut = st1.executeUpdate();
-			if(statut!=0) {
-				PreparedStatement st2 = co.prepareStatement("INSERT INTO RESERVATION(numerores,login,numerovol,nombreplaces,confirmation) VALUES (?,?,?,?,?)");
-				st2.setInt(1, 1); //A CHANGER
+			int statut = st1.executeUpdate();
+			if (statut != 0) {
+				PreparedStatement st2 = co.prepareStatement(
+						"INSERT INTO RESERVATIONS(numerores,login,numerovol,nombreplaces,confirmation) VALUES (?,?,?,?,?)");
+				st2.setInt(1, re.getNoReservation());
 				st2.setString(2, re.getLogin());
 				st2.setInt(3, re.getNoVol());
 				st2.setInt(4, re.getNbePlaces());
-				st2.setString(5, "OUI");
+				if (re.getConfirmation())
+					st2.setString(5, "OUI");
+				else
+					st2.setString(5, "NON");
 				statut = st2.executeUpdate();
 			}
+			if(statut != 0)
+				return re;
+			else
+				return null;
+		} catch (SQLException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static ArrayList<Reservation> getReservations(String log) {
+		ArrayList<Reservation> lRes = new ArrayList<Reservation>();
+		try {
+			PreparedStatement st = co.prepareStatement("SELECT * FROM RESERVATIONS WHERE login=?");
+			st.setString(1, log);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+				String temp = res.getString("confirmation");
+				boolean conf;
+				if (temp.equals("OUI"))
+					conf = true;
+				else
+					conf = false;
+				lRes.add(new Reservation(res.getInt("numerores"), res.getString("login"), res.getInt("numerovol"),
+						res.getInt("nombreplaces"), conf));
+			}
+			return lRes;
+		} catch (SQLException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static int confirmerReservation(int noRes) {
+		try {
+			PreparedStatement st = co.prepareStatement("UPDATE RESERVATIONS SET confirmation='OUI' WHERE numerores=?");
+			st.setInt(1, noRes);
+			int statut = st.executeUpdate();
 			return statut;
 		} catch (SQLException e) {
 			// TODO Bloc catch généré automatiquement
@@ -131,28 +186,24 @@ public class AccesBD {
 			return 0;
 		}
 	}
-
-	public static int prereserver(Reservation re) {
-		int statut=0;
+	
+	public static Vol ajouterVol(Vol vol) {
 		try {
-			PreparedStatement st1 = co.prepareStatement("UPDATE TABLE VOLS SET nombreplaces=nombreplaces-? WHERE novol=?");
-			st1.setInt(1, re.getNbePlaces());
-			st1.setInt(2, re.getNoVol());
-			statut = st1.executeUpdate();
-			if(statut!=0) {
-				PreparedStatement st2 = co.prepareStatement("INSERT INTO RESERVATION(numerores,login,numerovol,nombreplaces,confirmation) VALUES (?,?,?,?,?)");
-				st2.setInt(1, 1); //A CHANGER
-				st2.setString(2, re.getLogin());
-				st2.setInt(3, re.getNoVol());
-				st2.setInt(4, re.getNbePlaces());
-				st2.setString(5, "NON");
-				statut = st2.executeUpdate();
-			}
-			return statut;
+			PreparedStatement st = co.prepareStatement("INSERT INTO VOLS (numerovol,destination,datedepart,nombreplaces,prix) VALUES (?,?,?,?,?)");
+			st.setInt(1, vol.getNoVol());
+			st.setString(2, vol.getDestination());
+			st.setDate(3, vol.getDateDepart());
+			st.setInt(4, vol.getNbePlaces());
+			st.setFloat(5, vol.getPrix());
+			int statut = st.executeUpdate();
+			if(statut != 0)
+				return vol;
+			else
+				return null;
 		} catch (SQLException e) {
 			// TODO Bloc catch généré automatiquement
 			e.printStackTrace();
-			return 0;
+			return null;
 		}
 	}
 }

@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import modele.Compte;
 
@@ -22,8 +23,21 @@ public class Connexion extends HttpServlet {
 			Compte c = Compte.connecter(login, mdp);
 
 			// Envoi des informations de traitement à la vue
-			req.setAttribute("compte", c);
-			RequestDispatcher d = req.getRequestDispatcher("/vue/connexion.jsp");
+			RequestDispatcher d;
+			if(c != null) {
+				HttpSession session = req.getSession();
+				session.setAttribute("log", c.getLogin());
+				
+				if(c.getLogin().equals("admin"))
+					d = req.getRequestDispatcher("/vue/accueil-admin.jsp");
+				else {
+					req.setAttribute("compte", c);
+					d = req.getRequestDispatcher("/vue/connexion.jsp");
+				}
+			}
+			else
+				d = req.getRequestDispatcher("/vue/connexion.jsp");
+			
 			d.forward(req, res);
 		} catch (IOException | ServletException e) {
 			e.printStackTrace();

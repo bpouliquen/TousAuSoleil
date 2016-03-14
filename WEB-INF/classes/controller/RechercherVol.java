@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import baseDeDonnees.AccesBD;
 import modele.Vol;
 
 public class RechercherVol extends HttpServlet {
@@ -21,16 +20,14 @@ public class RechercherVol extends HttpServlet {
 		String dest = req.getParameter("dest");
 		String temp = req.getParameter("date");
 		int nbpers = Integer.parseInt(req.getParameter("nbpers"));
-		String log = req.getParameter("log");
 		Date date;
 		try {
 			date = Date.valueOf(temp);
 
 			// Requête SQL
-			ArrayList<Vol> vols = AccesBD.rechercherVols(dest, date, nbpers);
+			ArrayList<Vol> vols = Vol.rechercherVols(dest, date, nbpers);
 
 			// Envoi des informations de traitement à la vue
-			req.setAttribute("log", log);
 			req.setAttribute("dest", dest);
 			req.setAttribute("date", date.toString());
 			req.setAttribute("nbpers", nbpers);

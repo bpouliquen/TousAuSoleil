@@ -1,6 +1,11 @@
 package modele;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import baseDeDonnees.AccesBD;
 
 public class Vol {
 	private int noVol;
@@ -8,6 +13,22 @@ public class Vol {
 	private Date dateDepart;
 	private int nbePlaces;
 	private float prix;
+	private static int incVol = 1;
+	
+	static {
+		try {
+			ResultSet res = AccesBD.getVols();
+			while(res.next())
+				incVol++;
+		} catch (SQLException e) {
+			// TODO Bloc catch généré automatiquement
+			e.printStackTrace();
+		}
+	}
+	
+	public static int ajoutVol() {
+		return incVol++;
+	}
 
 	public Vol(int noV, String dest, Date dateDep, int nbePla, float prix) {
 		this.noVol = noV;
@@ -37,4 +58,11 @@ public class Vol {
 		return prix;
 	}
 	
+	public static ArrayList<Vol> rechercherVols(String dest, Date date, int nbpers) {
+		return AccesBD.rechercherVols(dest, date, nbpers);
+	}
+	
+	public static Vol ajouterVol(String dest, Date date, int nbePlaces, float prix) {
+		return AccesBD.ajouterVol(new Vol(ajoutVol(), dest, date, nbePlaces, prix));
+	}
 }
